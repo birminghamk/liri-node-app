@@ -51,6 +51,10 @@ function spotifyThisSong () {
 	var nodeArgs = process.argv;
 	var songName = "";
 
+	if (songName == "") {
+			songname == "The Sign";
+		}
+
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
 			songName+= "+" + nodeArgs[i];
@@ -71,10 +75,6 @@ function spotifyThisSong () {
 
 	}) 
 
-		if (songName = "") {
-			songname = "The Sign";
-		}
-
 } //END SPOTIFY THIS SONG FUNCTION
 
 function movieThis () {
@@ -82,6 +82,10 @@ function movieThis () {
 	var nodeArgs = process.argv;
 
 	var movieName = "";
+
+	if (songName == "") {
+			songname == "The Sign";
+		}
 
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
@@ -113,8 +117,8 @@ function movieThis () {
     console.log("Actors: " + JSON.parse(body).Actors);
   }
 
-  if (movieName = "") {
-  	movieName = "Mr. Nobody";
+  if (movieName == "") {
+  	movieName == "Mr. Nobody";
   }
 
 });
