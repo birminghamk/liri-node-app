@@ -1,96 +1,93 @@
-require("dotevn").config();
+require("dotenv").config();
 
-var importKeys = require('./keys.js');
+var keys = require('./keys.js');
 var request = require("request");
-var fs = require('file-system');
+var fs = require('fs');
+var Spotify = require('node-spotify-api');
+var Twitter = require('twitter');
 
-console.log(importKeys);
-console.log("dotenv");
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
-const result= dotenv.config()
-	
-	if (result.error) {
-		throw result.error
-	}
-console.log(result.parsed);
-
-var command = process.argv[2];
-
-switch(command) {
-	case("my-tweets"):
-		myTweets();
-		console.log("mytweets");
-		break;
-
-	case("spotify-this-song"):
-		spotifyThisSong();
-		break;
-
-	case("movie-this"):
-		movieThis();
-		break;
-
-	case("do-what-it-says"):
-		doWhatItSays();
-		break;
-}
-
 function myTweets () {
-	client.get('favorites/list', function(error, tweets, response) {
+	var params = {screen_name: 'nodeJS'};
+
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if(error) throw error;
-		console.log(tweets);
-		console.log(response);
+		
+		for (var i = 0; i < tweets.length; i++) {
+			console.log(tweets[i].text + "\n\n");
+		}
+
 	})
+
 } //END MY TWEETS FUNCTIOn
 
-function spotifyThisSong () {
+function spotifyThisSong (songName) {
+
+	if (songName == undefined) {
+			songName = "The Sign";
+		}
+
+	var songName;
 
 	var nodeArgs = process.argv;
-	var songName = "";
-
-	if (songName == "") {
-			songname == "The Sign";
-		}
 
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
-			songName+= "+" + nodeArgs[i];
-		} else {
-			songName += nodeArgs[i];
-		}
+
+			songName += " " + nodeArgs[i];
+
+		} 
 	}
 
-	spotify.search({type: 'track', query: songName }, function (err, data) {
-		if (err) {
-			return console.log('Error occurred: ' + err);
+	console.log(songName);
+
+	spotify.search(
+		{type: "track",
+		 query: songName,
+		 limit: 1
+		 }, 
+		function (err, data) {
+			if (err) {
+				return console.log('Error occurred: ' + err);
 		}
 
-	console.log("Artist(s)" + data.Artist);
-	console.log("Artist(s)" + data.Title);
-	console.log("Artist(s)" + data.URL);
-	console.log("Artist(s)" + data.Album);
+		songs = data.tracks.items;
 
-	}) 
+
+		for (var i = 0;i < songs.length; i++) {
+
+			// console.log(JSON.stringify(data.tracks.items, null, 2));
+			console.log("Artist: " + songs[i].album.artists[0].name);
+			console.log("Song: " + songs[i].name);
+			console.log("Preview: " + songs[i].preview_url);
+			console.log("Album: " + songs[i].album.name);
+			console.log("--------------------------------")
+
+		}
+
+	})
 
 } //END SPOTIFY THIS SONG FUNCTION
 
-function movieThis () {
+function movieThis (movieName) {
+
+
 
 	var nodeArgs = process.argv;
 
-	var movieName = "";
-
-	if (songName == "") {
-			songname == "The Sign";
+	if (movieName === undefined) {
+			movieName = "Mr. Nobody";
 		}
+
+	var movieName;
 
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
 
-			movieName+= "+" + nodeArgs[i];
+			movieName += "+" + nodeArgs[i];
 
 		} else {
 
@@ -105,20 +102,18 @@ function movieThis () {
   // If the request is successful (i.e. if the response status code is 200)
   if (!error && response.statusCode === 200) {
 
-    // Parse the body of the site and recover just the imdbRating
-    // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-    console.log("Title: " + JSON.parse(body).Title);
-    console.log("Year Released: " + JSON.parse(body).Year);
-    console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-    console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings.value);
-    console.log("Made in: " + JSON.parse(body).Country);
-    console.log("Language: " + JSON.parse(body).Language);
-    console.log("Plot: " + JSON.parse(body).Plot);
-    console.log("Actors: " + JSON.parse(body).Actors);
-  }
+  	var jsonData = JSON.parse(body);
 
-  if (movieName == "") {
-  	movieName == "Mr. Nobody";
+    // Parse the body of the site and recover data
+    console.log("Title: " + jsonData.Title);
+    console.log("Year Released: " + jsonData.Year);
+    console.log("IMDB Rating: " + jsonData.imdbRating);
+    console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
+    console.log("Made in: " + jsonData.Country);
+    console.log("Language: " + jsonData.Language);
+    console.log("Plot: " + jsonData.Plot);
+    console.log("Actors: " + jsonData.Actors);
+  
   }
 
 });
@@ -133,9 +128,47 @@ function doWhatItSays () {
 		if (error) {
 			return console.log(error);
 		}
+
+		var dataArr = data.split(",");	
+
+		if (dataArr.length === 2) {
+			pick(dataArr[0], dataArr[1]);
+		} else if (dataArr.length === 1) {
+			pick(dataArr[0]);
+		}
+
+	
 	})
 
-	// put text read from random.text to songName variable 
+	// put text read from random.text to songName variable
 	//run spotifyThisSong function
 
 } //END DO WHAT IT SAYS FUNCTION
+
+var pick = function(command, functionData) {
+	switch(command) {
+		case("my-tweets"):
+			myTweets();
+			break;
+
+		case("spotify-this-song"):
+			spotifyThisSong(functionData);
+			break;
+
+		case("movie-this"):
+			movieThis(functionData);
+			break;
+
+		case("do-what-it-says"):
+			doWhatItSays();
+			break;
+		default:
+			console.log("LIRI doesn't know how to do that");
+	}
+}
+
+var runThis = function(argOne, argTwo) {
+	pick(argOne, argTwo);
+}
+
+runThis(process.argv[2], process.argv[3]);
