@@ -75,7 +75,7 @@ function movieThis (movieName) {
 	var nodeArgs = process.argv;
 
 	if (movieName === undefined) {
-			movieName = "Mr. Nobody";
+			movieName = "Back to the Future";
 		}
 
 	var movieName;
@@ -133,7 +133,7 @@ function doWhatItSays () {
 		} else if (dataArr.length === 1) {
 			pick(dataArr[0]);
 		}
-		
+
 	})
 
 }
