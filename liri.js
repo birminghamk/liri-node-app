@@ -21,8 +21,7 @@ function myTweets () {
 		}
 
 	})
-
-} //END MY TWEETS FUNCTIOn
+}
 
 function spotifyThisSong (songName) {
 
@@ -33,17 +32,17 @@ function spotifyThisSong (songName) {
 	var songName;
 
 	var nodeArgs = process.argv;
-
+	// get song name from user input
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
 
 			songName += " " + nodeArgs[i];
-
 		} 
 	}
 
 	console.log(songName);
 
+	//search spotify API, display song info to user
 	spotify.search(
 		{type: "track",
 		 query: songName,
@@ -59,7 +58,6 @@ function spotifyThisSong (songName) {
 
 		for (var i = 0;i < songs.length; i++) {
 
-			// console.log(JSON.stringify(data.tracks.items, null, 2));
 			console.log("Artist: " + songs[i].album.artists[0].name);
 			console.log("Song: " + songs[i].name);
 			console.log("Preview: " + songs[i].preview_url);
@@ -70,11 +68,9 @@ function spotifyThisSong (songName) {
 
 	})
 
-} //END SPOTIFY THIS SONG FUNCTION
+} 
 
 function movieThis (movieName) {
-
-
 
 	var nodeArgs = process.argv;
 
@@ -84,6 +80,7 @@ function movieThis (movieName) {
 
 	var movieName;
 
+	//get movie name from user
 	for (var i = 3; i < nodeArgs.length; i++) {
 		if (i > 3 && i < nodeArgs.length) {
 
@@ -97,32 +94,31 @@ function movieThis (movieName) {
 
 	var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
+	//searches omdb API with queryUrl
 	request(queryUrl, function(error, response, body) {
 
-  // If the request is successful (i.e. if the response status code is 200)
-  if (!error && response.statusCode === 200) {
+  		// If the request is successful (i.e. if the response status code is 200)
+	  	if (!error && response.statusCode === 200) {
+		  	//makes JSON readable
+		  	var jsonData = JSON.parse(body);
 
-  	var jsonData = JSON.parse(body);
+		    // Parse the body of the site and recover data
+		    console.log("Title: " + jsonData.Title);
+		    console.log("Year Released: " + jsonData.Year);
+		    console.log("IMDB Rating: " + jsonData.imdbRating);
+		    console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
+		    console.log("Made in: " + jsonData.Country);
+		    console.log("Language: " + jsonData.Language);
+		    console.log("Plot: " + jsonData.Plot);
+		    console.log("Actors: " + jsonData.Actors);
+	 	}
 
-    // Parse the body of the site and recover data
-    console.log("Title: " + jsonData.Title);
-    console.log("Year Released: " + jsonData.Year);
-    console.log("IMDB Rating: " + jsonData.imdbRating);
-    console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
-    console.log("Made in: " + jsonData.Country);
-    console.log("Language: " + jsonData.Language);
-    console.log("Plot: " + jsonData.Plot);
-    console.log("Actors: " + jsonData.Actors);
-  
-  }
+	});
 
-});
-
-
-} //END MOVIE THIS FUNCTION
+}
 
 function doWhatItSays () {
-
+	//reads random.txt file
 	fs.readFile("random.txt", "utf8", function(error, data) {
 
 		if (error) {
@@ -130,20 +126,17 @@ function doWhatItSays () {
 		}
 
 		var dataArr = data.split(",");	
-
+		//read user input for command/functiondata
 		if (dataArr.length === 2) {
 			pick(dataArr[0], dataArr[1]);
+		//if user only puts in command
 		} else if (dataArr.length === 1) {
 			pick(dataArr[0]);
 		}
-
-	
+		
 	})
 
-	// put text read from random.text to songName variable
-	//run spotifyThisSong function
-
-} //END DO WHAT IT SAYS FUNCTION
+}
 
 var pick = function(command, functionData) {
 	switch(command) {
