@@ -1,8 +1,10 @@
-# Liri
+# LIRI
+
+![Demo](https://user-images.githubusercontent.com/30732917/38844198-a1818504-41af-11e8-95bd-c444a7307f9e.gif)
 
 ## How it Works
 
-A node application similar to iPhone's SIRI, only LIRI is a Language Interpretation and Recognition Interface (instead of speech). Liri takes in commands and gives back data. 
+A node application similar to iPhone's SIRI, only LIRI is a Language Interpretation and Recognition Interface (instead of speech). LIRI takes in commands and gives back data. 
 
 Commands:
 	- node liri.js my-tweets

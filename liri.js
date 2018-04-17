@@ -40,8 +40,6 @@ function spotifyThisSong (songName) {
 		} 
 	}
 
-	console.log(songName);
-
 	//search spotify API, display song info to user
 	spotify.search(
 		{type: "track",
