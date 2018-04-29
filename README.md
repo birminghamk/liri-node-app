@@ -28,7 +28,7 @@ Commands:
 		-- no user input for movie = search for 'Back to the Future'
 
 	- node liri.js do-what-it-says 
-		-- using fs Node package, LIRI will take text inside of random.txt and then use it to call onf of LIRI's commands
+		-- using fs Node package, LIRI will take text inside of random.txt and then use it to call one of LIRI's commands
 
 ## Technologies/Software
 	- Javascript/jQuery
