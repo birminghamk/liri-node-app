@@ -32,6 +32,7 @@ Commands:
 
 ## Technologies/Software
 	- Javascript/jQuery
+	- OMDb API
 	- Node.js
 	- NPM packages:
 		- dotenv
